@@ -20,8 +20,6 @@ public class WritingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_writing);
 
-        setTitle("글 작성하기");
-
         initView();
         initListener();
     }
