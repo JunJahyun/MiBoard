@@ -7,7 +7,7 @@ import android.widget.Button;
 
 public class WritingActivity extends AppCompatActivity {
 
-    Button button_Regist, button_Modify, button_Delete, button_SendEmail;
+    Button button_Regist;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,14 +20,10 @@ public class WritingActivity extends AppCompatActivity {
 
     private void initView() {
 
-        button_Regist = (Button) findViewById(R.id.button_Regist);
-        button_Modify = (Button) findViewById(R.id.button_Modify);
-        button_Delete = (Button) findViewById(R.id.button_Delete);
-        button_SendEmail = (Button) findViewById(R.id.button_SendEmail);
+        button_Regist = (Button) findViewById(R.id.button_default_layout1);
 
-        button_Modify.setVisibility(View.INVISIBLE);
-        button_Delete.setVisibility(View.INVISIBLE);
-        button_SendEmail.setVisibility(View.INVISIBLE);
+        button_Regist.setVisibility(View.VISIBLE);
+        button_Regist.setText("등록");
     }
 
     private void initListener() {

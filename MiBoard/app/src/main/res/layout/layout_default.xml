@@ -16,25 +16,20 @@
             android:orientation="horizontal"
             android:gravity="right">
             <Button
-                android:id="@+id/button_Regist"
+                android:id="@+id/button_default_layout3"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="등록"/>
+                android:visibility="invisible"/>
             <Button
-                android:id="@+id/button_Modify"
+                android:id="@+id/button_default_layout2"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="수정"/>
+                android:visibility="invisible"/>
             <Button
-                android:id="@+id/button_Delete"
+                android:id="@+id/button_default_layout1"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="삭제"/>
-            <Button
-                android:id="@+id/button_SendEmail"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="발송"/>
+                android:visibility="invisible"/>
         </LinearLayout>
 
         <ImageView

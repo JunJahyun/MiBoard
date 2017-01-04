@@ -7,7 +7,7 @@ import android.widget.Button;
 
 public class ReadingActivity extends AppCompatActivity {
 
-    Button button_Regist, button_Modify, button_Delete, button_SendEmail;
+    Button button_Modify, button_Delete, button_SendEmail;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,12 +19,18 @@ public class ReadingActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        button_Regist = (Button) findViewById(R.id.button_Regist);
-        button_Modify = (Button) findViewById(R.id.button_Modify);
-        button_Delete = (Button) findViewById(R.id.button_Delete);
-        button_SendEmail = (Button) findViewById(R.id.button_SendEmail);
 
-        button_Regist.setVisibility(View.INVISIBLE);
+        button_Modify = (Button) findViewById(R.id.button_default_layout3);
+        button_Delete = (Button) findViewById(R.id.button_default_layout2);
+        button_SendEmail = (Button) findViewById(R.id.button_default_layout1);
+
+        button_Modify.setVisibility(View.VISIBLE);
+        button_Delete.setVisibility(View.VISIBLE);
+        button_SendEmail.setVisibility(View.VISIBLE);
+
+        button_Modify.setText("수정");
+        button_Delete.setText("삭제");
+        button_SendEmail.setText("발송");
     }
 
     private void initListener() {
