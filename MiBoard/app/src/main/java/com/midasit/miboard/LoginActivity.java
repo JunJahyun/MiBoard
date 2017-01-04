@@ -25,6 +25,7 @@ public class LoginActivity extends AppCompatActivity {
 
     EditText editText_id, editText_password;
     Button button_login;
+    int fstatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,20 +56,21 @@ public class LoginActivity extends AppCompatActivity {
                 UserInfo.getInstance().id = editText_id.getText().toString();
                 UserInfo.getInstance().password = editText_password.getText().toString();
 
-                Login login = new Login();
-                login.execute();
+                attemptLogin attemptLogin = new attemptLogin();
+                attemptLogin.execute();
             }
         });
     }
 
-    private class Login extends AsyncTask<Void, Void, Void> {
+    private class attemptLogin extends AsyncTask<Void, Void, String> {
         @Override
-        protected Void doInBackground(Void... params) {
+        protected String doInBackground(Void... params) {
             URL url = null;
             HttpURLConnection conn = null;
             OutputStream os = null;
             InputStream is = null;
             ByteArrayOutputStream baos = null;
+            fstatus = 0;
 
             try {
                 url = new URL("http://192.168.43.106:5009/login");
@@ -78,6 +80,7 @@ public class LoginActivity extends AppCompatActivity {
                     conn.setReadTimeout(10000);
                     conn.setRequestMethod("POST");
                     // OutputStream으로 POST 데이터를 넘겨주겠다는 옵션.
+                    conn.setRequestProperty("Cache-Control", "no-cache");
                     conn.setRequestProperty("Content-Type", "application/json");
                     conn.setRequestProperty("Accept", "application/json");
                     conn.setDoOutput(true);
@@ -119,14 +122,13 @@ public class LoginActivity extends AppCompatActivity {
 
                         switch (result) {
                             case 200:
-                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                                finish();
+                                fstatus = 200;
                                 break;
                             case 404:
-                                Toast.makeText(getApplicationContext(), "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
+                                fstatus = 404;
                                 break;
                             case 405:
-                                Toast.makeText(getApplicationContext(), "서버와 연결이 원활하지 않습니다.", Toast.LENGTH_SHORT).show();
+                                fstatus = 405;
                                 break;
                         }
                         Log.e("DATA response = ", response);
@@ -141,6 +143,23 @@ public class LoginActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             return null;
+        }
+
+        protected void onPostExecute(String result) {
+            super.onPreExecute();
+            switch (fstatus) {
+                case 200:
+                    Toast.makeText(getApplicationContext(), "로그인에 성공하였습니다다.", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    finish();
+                    break;
+                case 404:
+                    Toast.makeText(getApplicationContext(), "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
+                    break;
+                case 405:
+                    Toast.makeText(getApplicationContext(), "서버와 연결이 원활하지 않습니다.", Toast.LENGTH_SHORT).show();
+                    break;
+            }
         }
     }
 }

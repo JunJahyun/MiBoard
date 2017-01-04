@@ -32,9 +32,9 @@ def login():
 	if data["id"] == 'a' and data["password"] == 'a':
 		return jsonify({'result_code':'200'}), 200
 	if data["id"] == 'a' and data["password"] != 'a':
-		return jsonify({'result_code':'405'}), 405
+		return jsonify({'result_code':'405'}), 200
 	else:
-		return jsonify({'result_code':'404'}), 404
+		return jsonify({'result_code':'404'}), 200
 
 
 @app.route("/login/member", methods=['GET', 'POST'])
