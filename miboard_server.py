@@ -27,15 +27,31 @@ def login():
 
 	temp = json.dumps(content)
 	data = json.loads(temp)
-	print data["id"]
 
-	if data["id"] == 'a' and data["password"] == 'a':
+	cursor.execute("SELECT password FROM miboard_member where id = \"" + data["id"] + "\"")
+	result = ""
+	columns = tuple( d[0] for d in cursor.description)
+
+	for row in cursor:
+		result = row
+
+	if data["password"] == result[0]:
 		return jsonify({'result_code':'200'}), 200
-	if data["id"] == 'a' and data["password"] != 'a':
+	if data["password"] != result[0]:
 		return jsonify({'result_code':'405'}), 200
 	else:
 		return jsonify({'result_code':'404'}), 200
 
+@app.route("/test", methods=['GET'])
+def test():
+	cursor.execute("SELECT password FROM miboard_member where id = \"" + "b\"")
+	result = ""
+	columns = tuple( d[0] for d in cursor.description)
+
+	for row in cursor:
+		result = row
+
+	return json.dumps(result)
 
 @app.route("/login/member", methods=['GET', 'POST'])
 def members():
