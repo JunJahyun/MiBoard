@@ -1,6 +1,8 @@
 package com.midasit.miboard;
 
 import android.content.Intent;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +10,7 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
+    private BackPressCloseHandler backPressCloseHandler;
     Button button_Search, button_Write;
 
     @Override
@@ -18,11 +21,12 @@ public class MainActivity extends AppCompatActivity {
         setTitle("글 목록");
 
         initView();
+        initModel();
         initListener();
     }
 
     private void initModel() {
-
+        backPressCloseHandler = new BackPressCloseHandler(this);
     }
 
     private void initView() {
@@ -37,5 +41,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), WritingActivity.class));
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+            backPressCloseHandler.onBackPressed();
     }
 }
