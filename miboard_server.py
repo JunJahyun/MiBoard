@@ -42,6 +42,13 @@ def login():
 	else:
 		return jsonify({'result_code':'404'}), 200
 
+@app.route("/save", methods=['GET','POST'])
+def write():
+	if request.method == 'POST':
+		print("POST");
+	return "upload Test";
+
+
 @app.route("/test", methods=['GET'])
 def test():
 	cursor.execute("SELECT password FROM miboard_member where id = \"" + "b\"")
