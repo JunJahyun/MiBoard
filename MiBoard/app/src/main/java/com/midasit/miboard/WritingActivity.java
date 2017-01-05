@@ -29,6 +29,8 @@ public class WritingActivity extends AppCompatActivity {
         button_Regist = (Button) findViewById(R.id.button_default_layout1);
         imageView_photo = (ImageView) findViewById(R.id.imageView_photo);
 
+        imageView_photo.setImageResource(R.mipmap.img_photo_default);
+
         button_Regist.setVisibility(View.VISIBLE);
         button_Regist.setText("등록");
     }
