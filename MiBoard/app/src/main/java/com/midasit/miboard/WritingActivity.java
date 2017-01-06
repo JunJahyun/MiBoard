@@ -34,6 +34,8 @@ public class WritingActivity extends AppCompatActivity {
     Button button_Regist;
     EditText editText_title, editText_content;
     ImageView imageView_photo;
+    MiboardData miboardData;
+    String dir;
     private static final int PICK_FROM_GALLERY = 1;
 
     @Override
@@ -42,6 +44,7 @@ public class WritingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_writing);
 
         initView();
+        initModel();
         initListener();
     }
 
@@ -56,6 +59,10 @@ public class WritingActivity extends AppCompatActivity {
 
         button_Regist.setVisibility(View.VISIBLE);
         button_Regist.setText("등록");
+    }
+
+    private void initModel() {
+       miboardData = new MiboardData();
     }
 
     private void initListener() {
@@ -79,12 +86,21 @@ public class WritingActivity extends AppCompatActivity {
                 }
             }
         });
+
+        button_Regist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                miboardData.setTitle(editText_title.getText().toString());
+                miboardData.setContent(editText_title.getText().toString());
+                //miboardData.setImageName();
+            }
+        });
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        Bundle extras = data.getExtras();
-        if (extras != null) {
+        Bundle extras;
+        try {
+            extras = data.getExtras();
             Bitmap photo = extras.getParcelable("data");
             switch (requestCode) {
                 case PICK_FROM_GALLERY:
@@ -92,11 +108,13 @@ public class WritingActivity extends AppCompatActivity {
                     imageView_photo.setScaleType(ImageView.ScaleType.FIT_CENTER);
                     break;
             }
-            saveImage(photo);
+            dir = saveImage(photo);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         }
     }
 
-    private void saveImage(Bitmap photo) {
+    private String saveImage(Bitmap photo) {
 
         final File saveDir = new File(getApplicationContext().getFilesDir(), "MiBoard");
 
@@ -123,6 +141,6 @@ public class WritingActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+        return saveDir + File.separator + filename + ".jpg";
     }
-
 }
