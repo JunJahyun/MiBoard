@@ -4,7 +4,7 @@ package com.midasit.miboard;
  * Created by JiyoungPark on 2017. 1. 5..
  */
 public class MiboardData {
-    String id, title, content, imageName;
+    protected String id, title, content, imageName;
 
     public MiboardData() {
         this.id = UserInfo.getInstance().id;

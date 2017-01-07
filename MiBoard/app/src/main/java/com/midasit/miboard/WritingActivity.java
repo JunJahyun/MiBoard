@@ -108,6 +108,7 @@ public class WritingActivity extends AppCompatActivity {
                 miboardData.setImageName(filename);
 
                 RequestParams params = new RequestParams();
+                params.setContentEncoding("utf-8");
                 params.add("id", miboardData.getId());
                 params.add("title", miboardData.getTitle());
                 params.add("content", miboardData.getContent());

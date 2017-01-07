@@ -1,6 +1,8 @@
 from flask import Flask, request, session, render_template, jsonify;
 from flaskext.mysql import MySQL;
-import json, os;
+import json, os, sys;
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 UPLOAD_FOLDER = '/Users/JiyoungPark/Documents/Code/MidasIT/Photos'
 
@@ -13,7 +15,8 @@ app.config['MYSQL_DATABASE_PASSWORD'] = 'akekdk1';
 app.config['MYSQL_DATABASE_DB'] = 'miboard';
 
 mysql.init_app(app);
-cursor = mysql.connect().cursor();
+conn = mysql.connect();
+cursor = conn.cursor();
 
 @app.route("/")
 def helloworld():
@@ -21,25 +24,15 @@ def helloworld():
 
 @app.route("/login", methods=['POST'])
 def login():
-	if request.form:
-		content = [item for item in request.form]
-		print "Content:", ''.join(content)
-	else:
-		content = request.get_json(force=True)
-		print "Content:", content
-
-	temp = json.dumps(content)
-	data = json.loads(temp)
-
-	cursor.execute("SELECT password FROM miboard_member where id = \"" + data["id"] + "\"")
+	cursor.execute("SELECT password FROM miboard_member where id = \"" + request.form['id'] + "\"")
 	result = ""
 	columns = tuple( d[0] for d in cursor.description)
 	for row in cursor:
 		result = row
 
-	if data["password"] == result[0]:
+	if request.form['password'] == result[0]:
 		return jsonify({'result_code':'200'}), 200
-	if data["password"] != result[0]:
+	if equest.form['password'] != result[0]:
 		return jsonify({'result_code':'405'}), 200
 	else:
 		return jsonify({'result_code':'404'}), 200
@@ -51,20 +44,20 @@ def write():
 		file = request.files['file']
 		file.save(os.path.join(app.config['UPLOAD_FOLDER'], request.form['imageName'] + ".jpg"))
 
-		if request.form:
-			content = [item for item in request.form]
-			print "Content:", ''.join(content)
-		else:
-			content = request.get_json(force=True)
-			print "Content:", content
+		print "id:", request.form['id']
+		print "title:", request.form['title']
+		print "content:", request.form['content']
+		print "imageName:", request.form['imageName']
+	 	content = request.form['content'].encode('utf-8')
 
-		temp = json.dumps(content)
-		data = json.loads(temp)
-
-		print("POST");
-
-	return "upload Test";
-
+		sql = """INSERT INTO miboard_board(id, title, content, imageName) VALUES (%s, %s, %s, %s)"""
+		#sql = "INSERT INTO miboard_board(id, title, content, imageName) VALUES (\'" + request.form['id'] + "\', \'" + request.form['title'].encode("utf-8") + "\', \'" + request.form['content'].encode("utf-8") + "\', \'" + request.form['imageName'] + "\');"
+		#cursor.execute(sql)
+		#print sql
+		cursor.execute(sql, (request.form['id'], request.form['title'].encode("utf-8"), request.form['content'].encode("utf-8"), request.form['imageName']))
+	
+		conn.commit()
+	
 
 @app.route("/test", methods=['GET'])
 def test():
