@@ -18,20 +18,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="1">
-            <EditText
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"/>
+            android:weightSum="3">
             <Button
-                android:id="@+id/button_search"
-                android:layout_width="wrap_content"
+                android:id="@+id/button_everyDaily"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="검색" />
+                android:layout_weight="1"
+                android:text="모든 글 보기" />
+            <Button
+                android:id="@+id/button_myDaily"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="내 글만 보기" />
             <Button
                 android:id="@+id/button_write"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="글쓰기" />
         </LinearLayout>
 

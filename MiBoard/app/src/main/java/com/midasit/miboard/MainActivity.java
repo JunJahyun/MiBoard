@@ -32,14 +32,13 @@ import cz.msebera.android.httpclient.Header;
 public class MainActivity extends AppCompatActivity {
 
     private BackPressCloseHandler backPressCloseHandler;
-    Button button_search, button_write;
+    Button button_write, button_everyDaily, button_myDaily;
     ListView listView_daily;
-    private AsyncHttpClient asyncHttpClient, asyncPhotoHttpClient;
+    private AsyncHttpClient asyncHttpClient;
     ReadAdapter readAdapter;
-    FileOutputStream outputStream;
     File file;
     ReadData data;
-    ArrayList<ReadData> source;
+    ArrayList<ReadData> source, source2;
 
 
     @Override
@@ -58,14 +57,15 @@ public class MainActivity extends AppCompatActivity {
     private void initModel() {
         backPressCloseHandler = new BackPressCloseHandler(this);
         asyncHttpClient = new AsyncHttpClient();
-        asyncPhotoHttpClient = new AsyncHttpClient();
         source = new ArrayList<>();
+        source2 = new ArrayList<>();
         file = new File(getApplicationContext().getFilesDir(), "MiBoard");
     }
 
     private void initView() {
-        button_search = (Button) findViewById(R.id.button_search);
         button_write = (Button) findViewById(R.id.button_write);
+        button_everyDaily = (Button) findViewById(R.id.button_everyDaily);
+        button_myDaily = (Button) findViewById(R.id.button_myDaily);
         listView_daily = (ListView) findViewById(R.id.listView_daily);
     }
 
@@ -80,6 +80,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), WritingActivity.class));
+            }
+        });
+
+        button_everyDaily.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                readAdapter = new ReadAdapter(getApplicationContext(), source);
+                listView_daily.setAdapter(readAdapter);
+                readAdapter.notifyDataSetChanged();
+            }
+        });
+
+        button_myDaily.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                readAdapter = new ReadAdapter(getApplicationContext(), source2);
+                listView_daily.setAdapter(readAdapter);
+                readAdapter.notifyDataSetChanged();
             }
         });
 
@@ -120,7 +138,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("jsonarray:", String.valueOf(jsonArray.getJSONObject(1).get("id")));
                 Log.e("json", rawJsonData);
 
-
                 for (int i = 0; jsonArray.getJSONObject(i) != null; i++) {
                     data = new ReadData();
                     data.setId(String.valueOf(jsonArray.getJSONObject(i).get("id")));
@@ -129,12 +146,17 @@ public class MainActivity extends AppCompatActivity {
                     data.setImageName(String.valueOf(jsonArray.getJSONObject(i).get("imageName")));
 
                     source.add(i, data);
+
+                    if(UserInfo.getInstance().id.equals(data.getId()))
+                        source2.add(source2.size(), data);
                 }
-                return jsonArray;
+                
+                readAdapter.notifyDataSetChanged();
+
+                return null;
             }
         });
 
-        readAdapter.notifyDataSetChanged();
     }
 
     @Override
