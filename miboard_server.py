@@ -1,8 +1,11 @@
 from flask import Flask, request, session, render_template, jsonify;
 from flaskext.mysql import MySQL;
-import json;
+import json, os;
+
+UPLOAD_FOLDER = '/Users/JiyoungPark/Documents/Code/MidasIT/Photos'
 
 app = Flask(__name__);
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 mysql = MySQL();
 
 app.config['MYSQL_DATABASE_USER'] = 'root';
@@ -31,7 +34,6 @@ def login():
 	cursor.execute("SELECT password FROM miboard_member where id = \"" + data["id"] + "\"")
 	result = ""
 	columns = tuple( d[0] for d in cursor.description)
-
 	for row in cursor:
 		result = row
 
@@ -45,7 +47,22 @@ def login():
 @app.route("/save", methods=['GET','POST'])
 def write():
 	if request.method == 'POST':
+
+		file = request.files['file']
+		file.save(os.path.join(app.config['UPLOAD_FOLDER'], request.form['imageName'] + ".jpg"))
+
+		if request.form:
+			content = [item for item in request.form]
+			print "Content:", ''.join(content)
+		else:
+			content = request.get_json(force=True)
+			print "Content:", content
+
+		temp = json.dumps(content)
+		data = json.loads(temp)
+
 		print("POST");
+
 	return "upload Test";
 
 
