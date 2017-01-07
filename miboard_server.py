@@ -1,4 +1,4 @@
-from flask import Flask, request, session, render_template, jsonify;
+from flask import Flask, request, session, render_template, jsonify, send_file;
 from flaskext.mysql import MySQL;
 import json, os, sys;
 reload(sys)
@@ -37,7 +37,7 @@ def login():
 	else:
 		return jsonify({'result_code':'404'}), 200
 
-@app.route("/save", methods=['GET','POST'])
+@app.route("/write", methods=['POST'])
 def write():
 	if request.method == 'POST':
 
@@ -48,18 +48,34 @@ def write():
 		print "title:", request.form['title']
 		print "content:", request.form['content']
 		print "imageName:", request.form['imageName']
-	 	content = request.form['content'].encode('utf-8')
 
-		sql = """INSERT INTO miboard_board(id, title, content, imageName) VALUES (%s, %s, %s, %s)"""
 		#sql = "INSERT INTO miboard_board(id, title, content, imageName) VALUES (\'" + request.form['id'] + "\', \'" + request.form['title'].encode("utf-8") + "\', \'" + request.form['content'].encode("utf-8") + "\', \'" + request.form['imageName'] + "\');"
 		#cursor.execute(sql)
-		#print sql
+		sql = """INSERT INTO miboard_board(id, title, content, imageName) VALUES (%s, %s, %s, %s)"""
 		cursor.execute(sql, (request.form['id'], request.form['title'].encode("utf-8"), request.form['content'].encode("utf-8"), request.form['imageName']))
-	
-		conn.commit()
-	
+		conn.commit();
+
+	return "POST";
+
+@app.route("/read", methods=['GET'])
+def read():
+	cursor.execute("SELECT * FROM miboard_board")
+
+	result = []
+	columns = tuple( d[0] for d in cursor.description)
+
+	for row in cursor:
+		result.append(dict(zip(columns, row)))
+
+	return json.dumps(result);
 
 @app.route("/test", methods=['GET'])
+
+@app.route("/photos/<imageName>", methods=["GET"])
+def loadPhotos(imageName):
+	print("imageName:"+imageName)
+	return send_file(UPLOAD_FOLDER+"/"+imageName+".jpg", mimetype='image')
+
 def test():
 	cursor.execute("SELECT password FROM miboard_member where id = \"" + "b\"")
 	result = ""
@@ -72,7 +88,6 @@ def test():
 
 @app.route("/login/member", methods=['GET', 'POST'])
 def members():
-	
 	cursor.execute("SELECT * FROM miboard_member")
 
 	result = []
