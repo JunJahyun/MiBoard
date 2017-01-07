@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.json.JSONException;
@@ -73,19 +74,12 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 UserInfo.getInstance().id = editText_id.getText().toString();
                 UserInfo.getInstance().password = editText_password.getText().toString();
+                
+                RequestParams params = new RequestParams();
+                params.add("id", UserInfo.getInstance().id);
+                params.add("password", UserInfo.getInstance().password);
 
-                JSONObject job = new JSONObject();
-                try {
-                    job.put("id", UserInfo.getInstance().id);
-                    job.put("password", UserInfo.getInstance().password);
-                    stringEntity = new StringEntity(job.toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-
-                asyncHttpClient.post(getApplicationContext(), "http://172.30.1.46:5009/login", stringEntity, "application/json", new TextHttpResponseHandler() {
+                asyncHttpClient.post(getApplicationContext(), getString(R.string.default_url) + "login", params, new TextHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, String responseBody) {
                         Log.e("stat", String.valueOf(statusCode));
@@ -109,9 +103,6 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "서버와 연결되지 않습니다.", Toast.LENGTH_SHORT).show();
                     }
                 });
-
-
-
             }
         });
     }
