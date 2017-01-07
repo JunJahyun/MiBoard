@@ -18,11 +18,6 @@
             android:orientation="horizontal"
             android:gravity="right">
             <Button
-                android:id="@+id/button_default_layout3"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:visibility="invisible"/>
-            <Button
                 android:id="@+id/button_default_layout2"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

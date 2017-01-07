@@ -2,5 +2,5 @@
     <string name="app_name">MiBoard</string>
 
     <!-- Strings related to login -->
-    <string name="default_url">http://192.168.0.80:5009/</string>
+    <string name="default_url">http://172.30.1.46:5009/</string>
 </resources>

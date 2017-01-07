@@ -34,9 +34,6 @@ public class LoginActivity extends AppCompatActivity {
 
     EditText editText_id, editText_password;
     Button button_login;
-    int fstatus;
-
-    StringEntity stringEntity;
 
     private AsyncHttpClient asyncHttpClient;
 
@@ -74,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 UserInfo.getInstance().id = editText_id.getText().toString();
                 UserInfo.getInstance().password = editText_password.getText().toString();
-                
+
                 RequestParams params = new RequestParams();
                 params.add("id", UserInfo.getInstance().id);
                 params.add("password", UserInfo.getInstance().password);
