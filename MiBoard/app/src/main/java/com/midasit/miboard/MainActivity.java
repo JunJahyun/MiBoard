@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -79,6 +80,22 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), WritingActivity.class));
+            }
+        });
+
+        listView_daily.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ReadData rd = (ReadData) parent.getItemAtPosition(position);
+                Bundle extras = new Bundle();
+                extras.putString("id", rd.getImageName());
+                extras.putString("title", rd.getTitle());
+                extras.putString("content", rd.getContent());
+                extras.putString("imageName", rd.getImageName());
+
+                Intent intent = new Intent(getApplicationContext(), ReadingActivity.class);
+                intent.putExtras(extras);
+                startActivity(intent);
             }
         });
     }
