@@ -1,9 +1,11 @@
 package com.midasit.miboard;
 
+import android.app.ActivityManager;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -119,21 +121,22 @@ public class WritingActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                Log.e("id", miboardData.getId());
-                Log.e("title", miboardData.getTitle());
-                Log.e("content", miboardData.getContent());
-                Log.e("imageName", miboardData.getImageName());
-                //params.put("profile_picture", file);
-
-                asyncHttpClient.post(getApplicationContext(), getString(R.string.default_url) + "save", params, new TextHttpResponseHandler() {
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                        Log.e("st", String.valueOf(statusCode));
-                    }
-
+                asyncHttpClient.post(getApplicationContext(), getString(R.string.default_url) + "write", params, new TextHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                        Log.e("st", String.valueOf(statusCode));
+                        Toast.makeText(getApplicationContext(), "Daily 저장에 성공하였습니다.", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        } else {
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        }
+                        startActivity(intent);
+                        finish();
+                    }
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        Toast.makeText(getApplicationContext(), "서버와의 연결이 원활하지 않습니다.", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
